@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @Service
@@ -31,6 +32,7 @@ public class CrawlingService {
             options.addArguments("--headless=new"); // headless 모드 (UI 확인 시 주석처리)
             options.addArguments("--disable-gpu");
             options.addArguments("--window-size=1920,1080");
+            options.addArguments("--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36");
 
             driver = new ChromeDriver(options);
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -40,6 +42,10 @@ public class CrawlingService {
             driver.get("https://www.miricanvas.com/template/all-types/%EC%9D%B4%EB%B2%88%EC%A3%BC%20%EC%9D%B8%EA%B8%B0%20%EC%B9%B4%EB%93%9C%EB%89%B4%EC%8A%A4?searchType=%EB%8D%94%EB%B3%B4%EA%B8%B0");
 
             List<WebElement> figures = driver.findElements(By.cssSelector("section figure"));
+            if (figures.isEmpty()) {
+                log.warn("No figures found on the page.");
+                return;
+            }
 
             for (int i = 0; i < 1; i++) {
                 try {
@@ -83,6 +89,12 @@ public class CrawlingService {
                     actions.sendKeys(Keys.ESCAPE).perform();
                     Thread.sleep(500);
 
+                    // 랜덤 딜레이 (2~5초)
+                    Random random = new Random();
+                    int delay = random.nextInt(3000) + 2000;
+                    log.info("Sleeping for {} ms before next action...", delay);
+                    Thread.sleep(delay);
+
                 } catch (TimeoutException e) {
                     System.out.println("Figure #" + (i + 1) + ": 모달 감지 실패, 넘어갑니다.");
                 }
@@ -94,3 +106,20 @@ public class CrawlingService {
         }
     }
 }
+
+
+//==== Figure #1 ====
+//Image URL: https://file.miricanvas.com/template_thumb/2024/12/11/12/00/k6ecv1y22u5gjkpv/thumb.webp?size=800
+//Image URL: https://file.miricanvas.com/template_thumb/2024/12/11/12/00/komvurbyjbr63195/thumb.webp?size=800
+//Image URL: https://file.miricanvas.com/template_thumb/2024/12/11/12/00/kdjb61zfcyj4rtz3/thumb.webp?size=800
+//Image URL: https://file.miricanvas.com/template_thumb/2024/12/11/12/00/kbwgl5o8xl0vu50i/thumb.webp?size=800
+//Image URL: https://file.miricanvas.com/template_thumb/2024/12/11/12/00/k7ntpdivf91my5is/thumb.webp?size=800
+//Image URL: https://file.miricanvas.com/template_thumb/2024/12/11/12/00/kjrkvov7a023sqjt/thumb.webp?size=800
+//Keyword: 체크
+//Keyword: 임대
+//Keyword: 미니멀
+//Keyword: 회색
+//Keyword: 비즈니스
+//Keyword: 소개
+//Keyword: 부동산
+//Keyword: 멋진
