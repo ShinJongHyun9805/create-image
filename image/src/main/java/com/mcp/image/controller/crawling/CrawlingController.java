@@ -17,6 +17,6 @@ public class CrawlingController {
 
     @GetMapping("/top-20/weekly")
     public void getCrawling() {
-        crawlingService.crawling();
+        crawlingService.insertCrawlingData();
     }
 }
